@@ -22,6 +22,7 @@
         , "ee-types"                : "*"
         , "ee-log"                  : "*"
         , "ee-error"                : "*"
+        , "ee-async"                : "*"
         , "ee-arguments"            : "*"
     }
     , "devDependencies": {
