@@ -1,7 +1,7 @@
 {
       "name"                        : "ee-db-connection"
-    , "description"                 : "abstract db conenction implementation for ee-orm"
-    , "version"                     : "0.1.0"
+    , "description"                 : "abstract db connection implementation for ee-orm"
+    , "version"                     : "0.1.2"
     , "homepage"                    : "https://github.com/eventEmitter/ee-db-connection"
     , "author"                      : "Michael van der Weg <michael@eventemitter.com> (http://eventemitter.com/)" 
     , "licence"                     : "mit"
@@ -17,18 +17,18 @@
         "url"                       : "https://github.com/eventEmitter/ee-db-connection/issues"
     }
     , "dependencies": {
-          "ee-class"                : "*"
-        , "ee-event-emitter"        : "*"
-        , "ee-types"                : "*"
-        , "ee-log"                  : "*"
-        , "ee-error"                : "*"
-        , "ee-async"                : "*"
-        , "ee-argv"                 : "*"
-        , "ee-arguments"            : "*"
+          "ee-class"                : "0.3.x"
+        , "ee-event-emitter"        : "0.1.x"
+        , "ee-types"                : "0.1.x"
+        , "ee-log"                  : "0.2.x"
+        , "ee-error"                : "0.1.x"
+        , "ee-async"                : "0.1.x"
+        , "ee-argv"                 : "0.1.x"
+        , "ee-arguments"            : "0.1.x"
     }
     , "devDependencies": {
-          "mocha"                   : "*"
-        , "ee-travis"               : "*"
+          "mocha"                   : "1.17.x"
+        , "ee-travis"               : "0.1.x"
     }
     , "optionalDependencies": {}
     , "keywords"                    : []
