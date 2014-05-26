@@ -1,11 +1,11 @@
 {
       "name"                        : "ee-db-connection"
     , "description"                 : "abstract db connection implementation for ee-orm"
-    , "version"                     : "0.1.9"
+    , "version"                     : "0.1.10"
     , "homepage"                    : "https://github.com/eventEmitter/ee-db-connection"
     , "author"                      : "Michael van der Weg <michael@eventemitter.com> (http://eventemitter.com/)" 
     , "licence"                     : "mit"
-    , "os"                          : "!win"
+    , "os"                          : ["!win"]
     , "repository": {
           "url"                     : "https://github.com/eventEmitter/ee-db-connection.git"
         , "type"                    : "git"
