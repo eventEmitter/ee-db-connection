@@ -1,14 +1,7 @@
 # ee-db-connection
 
-description
+Abstract connection implementation for the related orm
 
 ## installation
 
-
-
-## build status
-
-[![Build Status](https://travis-ci.org/eventEmitter/ee-db-connection.png?branch=master)](https://travis-ci.org/eventEmitter/ee-db-connection)
-
-
-## usage
+npm install ee-db-connection
