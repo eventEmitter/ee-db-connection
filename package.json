@@ -24,6 +24,7 @@
         , "ee-async"                : "0.2.x"
         , "ee-argv"                 : "0.1.x"
         , "ee-arguments"            : "0.1.x"
+        , "es6-promise"             : "2.0.x"
     }
     , "devDependencies": {
           "mocha"                   : "1.17.x"
