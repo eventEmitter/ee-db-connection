@@ -1,7 +1,3 @@
-# ee-db-connection
+# related-db-connection
 
-Abstract connection implementation for the related orm
-
-## installation
-
-npm install ee-db-connection
+Creates connections to the DB Server for the [Related ORM](https://www.npmjs.com/package/related). Vendor specific implementations should implement this module.
