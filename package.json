@@ -1,16 +1,16 @@
 {
       "name"                        : "related-db-connection"
     , "description"                 : "abstract db connection implementation for the related orm"
-    , "version"                     : "0.4.2"
+    , "version"                     : "0.4.3"
     , "homepage"                    : "https://github.com/eventEmitter/related-db-connection"
-    , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)" 
-    , "licence"                     : "mit"
+    , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)"
+    , "license"                     : "MIT"
     , "repository": {
           "url"                     : "https://github.com/eventEmitter/related-db-connection.git"
         , "type"                    : "git"
     }
     , "engines": {
-        "node"                      : ">=v0.10.17"
+        "node"                      : ">=0.12"
     }
     , "bugs": {
         "url"                       : "https://github.com/eventEmitter/related-db-connection/issues"
@@ -24,7 +24,6 @@
         , "ee-async"                : "0.2.x"
         , "ee-argv"                 : "0.1.x"
         , "ee-arguments"            : "0.1.x"
-        , "es6-promise"             : "2.0.x"
     }
     , "devDependencies": {
           "mocha"                   : "1.17.x"
