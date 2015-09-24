@@ -1,6 +1,8 @@
+(function() {
+    'use strict'
 
 
-	require('ee-error');
+    module.exports = require('./lib/Connection');
 
-
-	module.exports = require('./lib/Connection');
+})();
+	

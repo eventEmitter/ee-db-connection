@@ -1,65 +1,64 @@
-
+(function() {
+	'use strict';
 	
 	var   Class 		= require('ee-class')
 		, log 			= require('ee-log')
-		, assert 		= require('assert')
-		, travis 		= require('ee-travis');
+		, assert 		= require('assert');
 
 
 
-	var Schema = require('../')
+	var   TestConenction = require('./TestConnectionDriver')
+		, idleCount = 0
+		, busyCount = 0
+		, connection;
 
 
 
 
+	describe('The Connection', function() {
 
-	describe('The Schema', function(){
-		var schema, user;
+		it('should emit the idle event if the conenction could be established', function(done) {
+			connection = new TestConenction({}, 1);
 
-		it('should emit an «on load» event', function(done){
-			schema = new Schema({
-				  dialect: 	'postgres'
-				, host: 	process.ENV.DB_HOST
-				, port: 	process.ENV.DB_PORT
-				, user: 	'postgres'
-				, password: process.ENV.DB_PASS
-				, database: 'wpm'
-				, models: 	path.join(__dirname, '../schema')
-			});
+			connection.on('idle', function() {idleCount++;});
+			connection.on('busy', function() {busyCount++;});
 
-			schema.on('load', done);
-		});	
+			connection.once('idle', done);
+		});
 
-		it('should be able to insert records', function(done){
-			new schema.user({}).save().exec(function(err, usr){
-				if (!err) {
-					assert.ok(usr);
-					user = usr;
-				}
-				done(err);				
+
+		it('should accept raw sql queries', function(done) {
+			connection.query({SQL: 'select 1;', mode: 'query'}, done);
+		});
+
+
+		it('should accept queries', function(done) {
+			connection.query({query: {}, mode: 'insert'}, done);
+		});
+
+
+		it('should create a transaction', function(done) {
+			connection.createTransaction(done);
+		});
+
+
+		it('should commit a transaction', function(done) {
+			connection.commit(done);
+		});
+
+
+		it('should not accept any queries anymore', function(done) {
+			connection.query({SQL: 'select 1;', mode: 'query'}, function(err) {
+				assert(err instanceof Error);
+				done();
 			});
 		});
 
-		it('should respond with with matching records', function(done){
-			var qb = new schema.user().query();
-			qb.where({id: user.id}).select('id').exec(function(err, usr){
-				if (!err) {
-					assert.ok(usr);
-					assert.ok(usr.length === 1);
-					assert.deepEqual(JSON.stringify(user), JSON.stringify(usr[0]));
-				}
-				done(err);	
-			});
-		});	
 
-		it('should be able to delete records', function(done){
-			new schema.user({id: user.id}).fetch().exec(function(err, usr){
-				if (!err) {
-					assert.ok(usr);
-					usr.destroy().exec(done);					
-				}
-				else done(err);	
-			});
-		});		
+		it('should have emitted the correct amount of events', function() {
+			assert(idleCount === 3);
+			assert(busyCount === 3);
+		});
 	});
+})();
 	
