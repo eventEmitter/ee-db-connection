@@ -21,7 +21,7 @@
         /**
          * establishes the db conenction
          */
-        , connect: function(config, callback) {
+        , driverConnect: function(config, callback) {
             process.nextTick(callback);
         }
 

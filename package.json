@@ -22,6 +22,7 @@
         , "ee-log"                  : "0.3.x"
         , "ee-argv"                 : "0.1.x"
         , "async-method"            : "0.1.x"
+        , "related-error"           : "0.1.x"
     }
     , "devDependencies": {
           "mocha"                   : "2.x"
