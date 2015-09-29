@@ -22,10 +22,16 @@
         it('should emit the idle event if the conenction could be established', function(done) {
             connection = new TestConenction(config, 1);
 
+            var i = 0, doneCall = () => {
+            	if (++i === 2) done();
+            }
+
+            connection.connect().then(doneCall).catch(done);
+
             connection.on('idle', function() {idleCount++;});
             connection.on('busy', function() {busyCount++;});
 
-            connection.once('idle', done);
+            connection.once('idle', doneCall);
         });
 
 
@@ -69,6 +75,19 @@
 
         it('should return the correct config object', function() {
             assert(typeof connection.getConfig() === 'object');
+        });
+
+
+
+
+        it('should kill itself if asked to do so', function(done) {
+            let connection = new TestConenction(config, 1);
+
+            connection.connect();
+
+            connection.on('end', done);
+
+            connection.kill();
         });
     });
 })();
