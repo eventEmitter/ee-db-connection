@@ -1,65 +1,99 @@
-
+(function() {
+	'use strict';
 	
 	var   Class 		= require('ee-class')
 		, log 			= require('ee-log')
 		, assert 		= require('assert')
-		, travis 		= require('ee-travis');
+        , QueryContext  = require('related-query-context');
 
 
 
-	var Schema = require('../')
+	var   TestConenction = require('./TestConnectionDriver')
+		, idleCount = 0
+		, busyCount = 0
+		, config = {}
+		, connection;
 
 
 
 
 
-	describe('The Schema', function(){
-		var schema, user;
+    describe('The Connection', function() {
 
-		it('should emit an «on load» event', function(done){
-			schema = new Schema({
-				  dialect: 	'postgres'
-				, host: 	process.ENV.DB_HOST
-				, port: 	process.ENV.DB_PORT
-				, user: 	'postgres'
-				, password: process.ENV.DB_PASS
-				, database: 'wpm'
-				, models: 	path.join(__dirname, '../schema')
-			});
+        it('should emit the idle event if the conenction could be established', function(done) {
+            connection = new TestConenction(config, 1);
 
-			schema.on('load', done);
-		});	
+            var i = 0, doneCall = () => {
+            	if (++i === 2) done();
+            }
 
-		it('should be able to insert records', function(done){
-			new schema.user({}).save().exec(function(err, usr){
-				if (!err) {
-					assert.ok(usr);
-					user = usr;
-				}
-				done(err);				
-			});
-		});
+            connection.connect().then(doneCall).catch(done);
 
-		it('should respond with with matching records', function(done){
-			var qb = new schema.user().query();
-			qb.where({id: user.id}).select('id').exec(function(err, usr){
-				if (!err) {
-					assert.ok(usr);
-					assert.ok(usr.length === 1);
-					assert.deepEqual(JSON.stringify(user), JSON.stringify(usr[0]));
-				}
-				done(err);	
-			});
-		});	
+            connection.on('idle', function() {idleCount++;});
+            connection.on('busy', function() {busyCount++;});
 
-		it('should be able to delete records', function(done){
-			new schema.user({id: user.id}).fetch().exec(function(err, usr){
-				if (!err) {
-					assert.ok(usr);
-					usr.destroy().exec(done);					
-				}
-				else done(err);	
-			});
-		});		
-	});
-	
+            connection.once('idle', doneCall);
+        });
+
+
+        it('should accept raw sql queries', function(done) {
+            connection.query(new QueryContext({sql: 'select 1;', mode: 'select'})).then(done).catch(done);
+        });
+
+
+        it('should not accept non SQL queries', function(done) {
+            connection.query(new QueryContext({query: {
+                  select: ['*']
+                , from: 'event'
+                , database: 'related_test_postgres'
+            }, mode: 'select'})).then(() => {
+                done(new Error('Expected the query to fail!'))
+            }).catch((err) => {
+                assert(err instanceof Error);
+                done();
+            });
+        });
+
+
+        it('should create a transaction', function(done) {
+            connection.createTransaction().then(done).catch(done);
+        });
+
+
+        it('should commit a transaction', function(done) {
+            connection.commit().then(done).catch(done);
+        });
+
+
+        it('should not accept any queries anymore', function(done) {
+            connection.query(new QueryContext({sql: 'select 1;', mode: 'select'})).then(() => {done()}).catch((err) => {
+                assert(err instanceof Error);
+                done();
+            });
+        });
+
+
+        it('should have emitted the correct amount of events', function() {
+            assert(idleCount === 2);
+            assert(busyCount === 2);
+        });
+
+
+        it('should return the correct config object', function() {
+            assert(typeof connection.getConfig() === 'object');
+        });
+
+
+
+
+        it('should kill itself if asked to do so', function(done) {
+            let connection = new TestConenction(config, 1);
+
+            connection.connect();
+
+            connection.on('end', done);
+
+            connection.kill();
+        });
+    });
+})();
