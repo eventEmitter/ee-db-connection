@@ -5,7 +5,6 @@
     var   Class         = require('ee-class')
         , type          = require('ee-types')
         , log           = require('ee-log')
-        , asyncMethod   = require('async-method')
         , Connection    = require('../lib/Connection')
         ;
 
