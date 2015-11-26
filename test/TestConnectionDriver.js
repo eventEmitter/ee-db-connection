@@ -17,6 +17,10 @@
         inherits: Connection
 
 
+        , brand: 'TEST'
+
+
+        , pools : ['read', 'write']
 
         /**
          * establishes the db conenction
@@ -30,27 +34,14 @@
         /**
          * executes a query
          */
-        , executeQuery: function(query, callback) {
-            process.nextTick(callback);
+        , executeQuery: function(queryContext) {
+            return Promise.resolve();
         }
 
 
-        /**
-         * takes a query, its parameters and inserts the into the query
-         */
-        , paramterizeQuery: function() {
 
-        }
-
-
-        /**
-         * convert a query object to an sql string
-         */
-        , render: function() {
-            return {
-                  SQL: ''
-                , parameters: {}
-            };
+        , renderSQLQuery: function(input) {
+            return input;
         }
     });
 })();

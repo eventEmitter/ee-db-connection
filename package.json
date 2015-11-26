@@ -1,7 +1,7 @@
 {
       "name"                        : "related-db-connection"
     , "description"                 : "Abstract DB connection"
-    , "version"                     : "0.4.4"
+    , "version"                     : "2.0.0"
     , "homepage"                    : "https://github.com/eventEmitter/related-db-connection"
     , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)"
     , "license"                     : "MIT"
@@ -18,11 +18,12 @@
     , "dependencies": {
           "ee-class"                : "1.x"
         , "ee-types"                : "1.x"
+        , "related-query-context"   : "2.x"
         , "ee-event-emitter"        : "0.3.x"
         , "ee-log"                  : "0.3.x"
         , "ee-argv"                 : "0.1.x"
-        , "async-method"            : "0.1.x"
         , "related-error"           : "0.1.x"
+        , "sqlformatter"            : "0.1.x"
     }
     , "devDependencies": {
           "mocha"                   : "2.x"
