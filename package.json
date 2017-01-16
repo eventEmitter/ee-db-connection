@@ -1,7 +1,7 @@
 {
       "name"                        : "related-db-connection"
     , "description"                 : "abstract db connection implementation for the related orm"
-    , "version"                     : "2.0.2"
+    , "version"                     : "2.1.0"
     , "homepage"                    : "https://github.com/eventEmitter/related-db-connection"
     , "author"                      : "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)"
     , "license"                     : "MIT"
