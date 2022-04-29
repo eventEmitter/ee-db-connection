@@ -74,8 +74,8 @@
 
 
         it('should have emitted the correct amount of events', function() {
-            assert(idleCount === 2);
-            assert(busyCount === 2);
+            assert.equal(busyCount, 3, 'busyCount');
+            assert.equal(idleCount, 3, 'idleCount');
         });
 
 
