@@ -199,9 +199,6 @@ module.exports = class Connection extends Events {
             
             // idle, not a transcation
             this.end();
-
-            // remove lsitners
-            this.removeAllListeners();
         }
         else if (this.queryRunning) {
 
@@ -211,17 +208,11 @@ module.exports = class Connection extends Events {
                 this.once('queryEnd', () => {
                     
                     this.end();
-                    
-                    // remove lsitners
-                    this.removeAllListeners();
                 });
             }
         } 
         else {
             this.end();
-            
-            // remove listenerss
-            this.removeAllListeners();
         }
     }
 
@@ -244,7 +235,7 @@ module.exports = class Connection extends Events {
             let connectTimeout = setTimeout(() => {
 
                 // remove all event listeners
-                this.removeAllListeners();
+               this.end(new Error("Encoutered a connect timeout!"));
 
                 // make sure that the connection gets closed 
                 // as soon it may connect
@@ -259,7 +250,9 @@ module.exports = class Connection extends Events {
 
             // let the driver specific method connect
             this.driverConnect(this.config, (err) => {
-
+                 // clear the timeout timer
+                 clearTimeout(connectTimeout);
+                 
                 if (this.killed) {
                     // the connection was killed during startup
                     // end everything now
@@ -271,25 +264,22 @@ module.exports = class Connection extends Events {
                     if (hasTimeout) {
 
                         // the connection had a timeout, let the driver kill it!
-                        this.endConnection(() => {});
+                        this.end(err || new Error("Encoutered a connect timeout!"));
                     }
                     else {
-
-                        // clear the timeout timer
-                        clearTimeout(connectTimeout);
-
-
                         if (!err) {
                             // ok, connected
                             resolve();
 
                             // wait a tick, so that all relevant code gets this event
-                            this.idle = true;
+                            process.nextTick(() => {
+                                this.idle = true;
+                            });
                         }
                         else {
 
                             // remove all event listeners
-                            this.removeAllListeners();
+                            this.end(err);
 
                             // return
                             reject(err);
@@ -365,7 +355,7 @@ module.exports = class Connection extends Events {
 
 
                 const queryTimeout = setTimeout(() => {
-                    log.warn(`The query is running for more thatn ${this.timeout}ms!`);
+                    log.warn(`The query is running for more than ${this.timeout}ms!`);
                     this.printPreQueryDebugInfo(queryContext);
                 }, this.timeout);
 
