@@ -3,7 +3,7 @@
     "description": "abstract db connection implementation for the related orm",
     "version": "2.2.6",
     "homepage": "https://github.com/eventEmitter/related-db-connection",
-    "author": "Michael van der Weg <michael@joinbox.com> (http://joinbox.com/)",
+    "author": "Lina van der Weg <lina@vanderweg.ch>",
     "license": "MIT",
     "repository": {
         "url": "https://github.com/eventEmitter/related-db-connection.git",
@@ -17,10 +17,6 @@
     },
     "dependencies": {
         "ee-argv": "^0.1.4",
-        "ee-class": "^1.4.0",
-        "ee-event-emitter": "^0.3.1",
-        "ee-log": "^1.1.0",
-        "ee-types": "^1.0.0",
         "linkd": "^3.0.0",
         "related-error": "0.1.x",
         "related-mysql-analyzer": "^2.0.12",

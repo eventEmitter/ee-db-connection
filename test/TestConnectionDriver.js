@@ -1,46 +1,33 @@
-(function() {
-    'use strict';
-
-
-    var   Class         = require('ee-class')
-        , type          = require('ee-types')
-        , log           = require('ee-log')
-        , Connection    = require('../lib/Connection')
-        ;
+const Connection = require('../src/Connection.js');
 
 
 
+module.exports = class TestConnectionDriver extends Connection {
+
+    brand = 'TEST';
 
 
-    module.exports = new Class({
-        inherits: Connection
+    pools = ['read', 'write'];
 
-
-        , brand: 'TEST'
-
-
-        , pools : ['read', 'write']
-
-        /**
-         * establishes the db conenction
-         */
-        , driverConnect: function(config, callback) {
-            process.nextTick(callback);
-        }
+    /**
+     * establishes the db conenction
+     */
+    driverConnect(config, callback) {
+        process.nextTick(callback);
+    }
 
 
 
-        /**
-         * executes a query
-         */
-        , executeQuery: function(queryContext) {
-            return Promise.resolve();
-        }
+    /**
+     * executes a query
+     */
+    executeQuery(queryContext) {
+        return Promise.resolve();
+    }
 
 
 
-        , renderSQLQuery: function(input) {
-            return input;
-        }
-    });
-})();
+    renderSQLQuery(input) {
+        return input;
+    }
+}
