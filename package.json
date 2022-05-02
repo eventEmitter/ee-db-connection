@@ -1,7 +1,7 @@
 {
     "name": "related-db-connection",
     "description": "abstract db connection implementation for the related orm",
-    "version": "2.2.6",
+    "version": "2.2.7",
     "homepage": "https://github.com/eventEmitter/related-db-connection",
     "author": "Lina van der Weg <lina@vanderweg.ch>",
     "license": "MIT",
