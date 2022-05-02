@@ -2,7 +2,7 @@
     'use strict'
 
 
-    module.exports = require('./lib/Connection');
+    module.exports = require('./src/Connection.js');
 
 })();
 	
