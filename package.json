@@ -18,6 +18,7 @@
     "dependencies": {
         "ee-argv": "^0.1.4",
         "linkd": "^3.0.0",
+        "logd": "^2.3.1",
         "related-error": "0.1.x",
         "related-mysql-analyzer": "^2.0.12",
         "related-mysql-connection": "^2.0.1",
@@ -33,7 +34,6 @@
     "devDependencies": {
         "mocha": "2.x"
     },
-    "optionalDependencies": {},
     "scripts": {
         "test": "./node_modules/mocha/bin/mocha --reporter spec"
     }

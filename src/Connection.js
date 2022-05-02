@@ -1,14 +1,16 @@
-const argv                  = require('ee-argv');
-const RelatedError          = require('related-error');
-const QueryContext          = require('related-query-context');
-const sqlformatter          = require('sqlformatter');
-const relatedSlow           = argv.has('related-slow');
-const relatedSQL            = argv.has('related-sql');
-const relatedPreSQLQuery    = argv.has('related-pre-query-sql');
-const relatedErrors         = argv.has('related-errors');
+const argv = require('ee-argv');
+const RelatedError = require('related-error');
+const QueryContext = require('related-query-context');
+const sqlformatter = require('sqlformatter');
+const relatedSlow = argv.has('related-slow');
+const relatedSQL = argv.has('related-sql');
+const relatedPreSQLQuery = argv.has('related-pre-query-sql');
+const relatedErrors = argv.has('related-errors');
 const Events = require('events');
+const logd = require('logd');
 
 
+const log = logd.module('Connection');
 
 
 module.exports = class Connection extends Events {
@@ -33,15 +35,26 @@ module.exports = class Connection extends Events {
             // dont emit the events if we're not part of the pool
             if (this.pooled) {
                 if (value) {
-                    if (this.idleTimeoutTimer) clearTimeout(this.idleTimeoutTimer);
-                    
+                    if (this.idleTimeoutTimer) {
+                        clearTimeout(this.idleTimeoutTimer);
+                        this.idleTimeoutTimer = null;
+                    }
+
                     // don't emit idle if the connection has ended or was killed
                     if (!this.ended && !this.killed) {
                         this.emit('idle');
                     }
                 } else {
+                    if (this.idleTimeoutTimer) {
+                        log.warn(`Attempt to set a buys timeout timer for a connection that already has one!`);
+                        clearTimeout(this.idleTimeoutTimer);
+                    }
+
                     this.idleTimeoutTimer = setTimeout(() => {
-                        log.warn(`Connection is marked as busy for more than ${this.idleTimeout}ms and cannot be used for other queries.`);
+                        log.warn(`Connection is marked as busy for more than ${this.idleTimeout}ms and cannot be used for other queries. Last query:`);
+                        if (this.lastQuery) {
+                            this.printPreQueryDebugInfo(this.lastQuery);
+                        }
                     }, this.timeout);
 
                     this.emit('busy');
@@ -356,6 +369,8 @@ module.exports = class Connection extends Events {
                     this.printPreQueryDebugInfo(queryContext);
                 }, this.timeout);
 
+                this.lastQuery = queryContext;
+
                 // execute the query on the driver implementation
                 return this.executeQuery(queryContext).then((data) => {
                     clearTimeout(queryTimeout);
@@ -595,6 +610,9 @@ ${this.createDebugBanner('PRE QUERY SQL DEBUGGER', true).grey}
      * close the connection
      */
     end(err) {
+        if (this.idleTimeoutTimer) clearTimeout(this.idleTimeoutTimer);
+        this.lastQuery = null;
+
         if (!this.ended) {
             this.ended = true;
 
