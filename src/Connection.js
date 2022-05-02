@@ -33,12 +33,17 @@ module.exports = class Connection extends Events {
             // dont emit the events if we're not part of the pool
             if (this.pooled) {
                 if (value) {
-
+                    if (this.idleTimeoutTimer) clearTimeout(this.idleTimeoutTimer);
+                    
                     // don't emit idle if the connection has ended or was killed
                     if (!this.ended && !this.killed) {
                         this.emit('idle');
                     }
                 } else {
+                    this.idleTimeoutTimer = setTimeout(() => {
+                        log.warn(`Connection is marked as busy for more than ${this.idleTimeout}ms and cannot be used for other queries.`);
+                    }, this.timeout);
+
                     this.emit('busy');
                 }
             }
@@ -345,8 +350,15 @@ module.exports = class Connection extends Events {
 
                 if (relatedPreSQLQuery) this.printPreQueryDebugInfo(queryContext);
 
-                // execute the query
+
+                const queryTimeout = setTimeout(() => {
+                    log.warn(`The query is running for more thatn ${this.timeout}ms!`);
+                    this.printPreQueryDebugInfo(queryContext);
+                }, this.timeout);
+
+                // execute the query on the driver implementation
                 return this.executeQuery(queryContext).then((data) => {
+                    clearTimeout(queryTimeout);
 
                     // set query status
                     queryContext.setStatus('after-execute');
@@ -366,6 +378,7 @@ module.exports = class Connection extends Events {
                     // return the results
                     return Promise.resolve(data);
                 }).catch((err) => {
+                    clearTimeout(queryTimeout);
 
                     // set status
                     queryContext.setStatus('after-execute', err);

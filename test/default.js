@@ -15,6 +15,7 @@ let connection;
 
 describe('The Connection', function() {
 
+    
     it('should emit the idle event if the conenction could be established', function(done) {
         connection = new TestConenction(config, 1);
 
