@@ -183,7 +183,7 @@ module.exports = class Connection extends Events {
             this.end();
 
             // remove lsitners
-            this.off();
+            this.removeAllListeners();
         }
         else if (this.queryRunning) {
 
@@ -195,7 +195,7 @@ module.exports = class Connection extends Events {
                     this.end();
                     
                     // remove lsitners
-                    this.off();
+                    this.removeAllListeners();
                 });
             }
         } 
@@ -226,7 +226,7 @@ module.exports = class Connection extends Events {
             let connectTimeout = setTimeout(() => {
 
                 // remove all event listeners
-                this.off();
+                this.removeAllListeners();
 
                 // make sure that the connection gets closed 
                 // as soon it may connect
@@ -271,7 +271,7 @@ module.exports = class Connection extends Events {
                         else {
 
                             // remove all event listeners
-                            this.off();
+                            this.removeAllListeners();
 
                             // return
                             reject(err);
@@ -602,7 +602,9 @@ ${this.createDebugBanner('PRE QUERY SQL DEBUGGER', true).grey}
             if (this.connection) {
 
                 // the driver must end the connection now
-                this.endConnection(this.off.bind(this));
+                this.endConnection(() => {
+                    this.removeAllListeners();
+                });
             }
             else this.removeAllListeners();
         }
